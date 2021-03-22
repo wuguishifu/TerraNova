@@ -44,14 +44,20 @@ public class TextureRenderer {
         GL30.glEnableVertexAttribArray(1);
         GL30.glEnableVertexAttribArray(2);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, object.getMesh().getIBO());
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+
+        // bind the textures
+        GL13.glActiveTexture(GL13.GL_TEXTURE0); // the default texture
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, object.getMesh().getMaterial().getTextureID());
+        GL13.glActiveTexture(GL13.GL_TEXTURE0 + 1); // the specular map
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, object.getMesh().getMaterial().getSpecularID());
+
+
         shader.bind();
         shader.setUniform("model", Matrix4f.transform(object.getPosition(), object.getRotation(), object.getScale()));
         shader.setUniform("view", Matrix4f.view(camera.getPosition(), camera.getRotation()));
         shader.setUniform("projection", window.getProjectionMatrix());
         shader.setUniform("lightPos", lightPosition);
-        shader.setUniform("lightLevel", 0.2f);
+        shader.setUniform("lightLevel", 0.1f);
         shader.setUniform("viewPos", camera.getPosition());
         shader.setUniform("lightColor", lightColor);
         GL11.glDrawElements(GL11.GL_TRIANGLES, object.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);

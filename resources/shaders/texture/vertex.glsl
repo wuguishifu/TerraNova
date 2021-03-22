@@ -15,9 +15,6 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-// the texture sampler
-uniform sampler2D tex;
-
 // the main runnable
 void main() {
     // set the position of this vertex
@@ -27,7 +24,7 @@ void main() {
     passFragPos = vec3(model * vec4(position, 1.0));
 
     // pass the normal vector for the specified vertex to the fragment shader
-    passNormal = model * vec4(normalize(normal), 1.0);
+    passNormal = vec4(normalize(normal), 1.0);
 
     // pass the color
     passTextureCoord = textureCoord;

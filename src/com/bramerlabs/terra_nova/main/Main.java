@@ -99,7 +99,7 @@ public class Main implements Runnable {
         lightCube = new Cube(lightPosition, new Vector3f(0), new Vector3f(0.5f), new Vector4f(1.0f));
         lightCube.createMesh();
 
-        box = new Box(new Vector3f(0), new Vector3f(0), new Vector3f(0.5f), "textures/box/container2_512x512.png");
+        box = new Box(new Vector3f(0), new Vector3f(0), new Vector3f(1), "textures/box/boxTexture.png", "textures/box/boxSpecular.png");
         box.createMesh();
 
     }

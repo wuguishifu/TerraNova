@@ -23,7 +23,7 @@ void main() {
     passFragPos = vec3(model * vec4(position, 1.0));
 
     // pass the normal vector, color, and light position for the specific vertex to the fragment shader
-    passNormal = model * vec4(normalize(normal), 1.0); // normalize the vector normal to the vertex
+    passNormal = vec4(normalize(normal), 1.0); // normalize the vector normal to the vertex
 
     // pass the color
     passColor = color;

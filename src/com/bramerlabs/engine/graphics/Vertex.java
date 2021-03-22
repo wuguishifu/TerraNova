@@ -49,7 +49,6 @@ public class Vertex {
     public Vertex(Vector3f position, Vector2f textureCoord, Vector3f normal) {
         this.position = position;
         this.textureCoord = textureCoord;
-        this.color = new Vector4f(0);
         this.normal = normal;
     }
 

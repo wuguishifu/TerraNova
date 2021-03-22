@@ -29,7 +29,7 @@ public class Box extends RenderObject {
      * @param scale - the scale of this object
      * @param pathToTexture - the path to the texture this object is made of
      */
-    public Box(Vector3f position, Vector3f rotation, Vector3f scale, String pathToTexture) {
+    public Box(Vector3f position, Vector3f rotation, Vector3f scale, String pathToTexture, String pathToSpecularMap) {
         super(new Mesh(new Vertex[] {
                 // front face
                 new Vertex(new Vector3f(-0.5f, -0.5f,  0.5f), new Vector2f(0, 1), new Vector3f(0, 0, 1)), // 0, 1
@@ -90,7 +90,7 @@ public class Box extends RenderObject {
                 // bottom face
                 20, 22, 23,
                 20, 23, 21,
-        }, new Material(pathToTexture)), position, rotation, scale);
+        }, new Material(pathToTexture,pathToSpecularMap)), position, rotation, scale);
     }
 
 

@@ -15,6 +15,9 @@ public class Material {
     // the path to the texture
     private String pathToTexture;
 
+    // the path to the specular map
+    private String pathToSpecularMap;
+
     // the format of the texture file
     private static final String FORMAT = "PNG";
 
@@ -23,16 +26,19 @@ public class Material {
 
     // the textureID
     private int textureID;
+    private int specularID;
 
     // the texture interface
     private Texture texture;
+    private Texture specular;
 
     /**
      * default constructor for specified path to texture
      * @param pathToTexture - the path to the texture
      */
-    public Material(String pathToTexture) {
+    public Material(String pathToTexture, String pathToSpecularMap) {
         this.pathToTexture = pathToTexture;
+        this.pathToSpecularMap = pathToSpecularMap;
         this.create();
     }
 
@@ -42,6 +48,7 @@ public class Material {
     public void create() {
         try {
             texture = TextureLoader.getTexture(FORMAT, FileUtils.class.getModule().getResourceAsStream(pathToTexture), GL_NEAREST);
+            specular = TextureLoader.getTexture(FORMAT, FileUtils.class.getModule().getResourceAsStream(pathToSpecularMap), GL_NEAREST);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error: could not load texture.");
@@ -51,6 +58,7 @@ public class Material {
         width = texture.getWidth();
         height = texture.getHeight();
         textureID = texture.getTextureID();
+        specularID = specular.getTextureID();
     }
 
     /**
@@ -58,6 +66,7 @@ public class Material {
      */
     public void destroy() {
         GL20.glDeleteTextures(textureID);
+        GL20.glDeleteTextures(specularID);
     }
 
     /**
@@ -82,5 +91,13 @@ public class Material {
      */
     public int getTextureID() {
         return this.textureID;
+    }
+
+    /**
+     * getter method
+     * @return - the id of the specular map
+     */
+    public int getSpecularID() {
+        return this.specularID;
     }
 }

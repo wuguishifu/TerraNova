@@ -14,7 +14,8 @@ uniform float lightLevel;
 uniform vec3 viewPos;
 
 // the tex uniform
-uniform sampler2D tex;
+layout(binding = 0) uniform sampler2D diffuseMap;
+layout(binding = 1) uniform sampler2D specularMap;
 
 // the output color
 out vec4 outColor;
@@ -22,8 +23,8 @@ out vec4 outColor;
 void main() {
 
     // get the rgb components of the texture
-    vec4 textureColor = texture(tex, passTextureCoord);
-    vec3 color = vec3(1.0, 1.0, 1.0);
+    vec4 textureColor = texture(diffuseMap, passTextureCoord);
+    vec3 color = vec3(textureColor.xyz);
 
     // get the alpha value of the texture
     float alpha = textureColor.w;
@@ -44,7 +45,7 @@ void main() {
     vec3 viewDir = normalize(viewPos - passFragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * lightColor;
+    vec3 specular = specularStrength * spec * vec3(texture(specularMap, passTextureCoord));
 
     // combine the ambient, diffusion, and specular lighting into the final fragment color
     vec3 colorResult = (ambientLight + diffuseLight + specular) * color; // combine the light components
