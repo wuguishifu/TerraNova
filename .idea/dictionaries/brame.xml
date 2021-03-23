@@ -2,6 +2,9 @@
   <dictionary name="brame">
     <words>
       <w>arcball</w>
+      <w>bitan</w>
+      <w>bitangent</w>
+      <w>bitangents</w>
       <w>coord</w>
       <w>glsl</w>
       <w>shaders</w>

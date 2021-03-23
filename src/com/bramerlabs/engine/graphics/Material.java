@@ -13,10 +13,7 @@ import static org.lwjgl.opengl.GL11.GL_NEAREST;
 public class Material {
 
     // the path to the texture
-    private String pathToTexture;
-
-    // the path to the specular map
-    private String pathToSpecularMap;
+    private String pathToTexture, pathToSpecularMap, pathToNormalMap;
 
     // the format of the texture file
     private static final String FORMAT = "PNG";
@@ -25,20 +22,19 @@ public class Material {
     private float width, height;
 
     // the textureID
-    private int textureID;
-    private int specularID;
+    private int textureID, specularID, normalID;
 
     // the texture interface
-    private Texture texture;
-    private Texture specular;
+    private Texture texture, specular, normal;
 
     /**
      * default constructor for specified path to texture
      * @param pathToTexture - the path to the texture
      */
-    public Material(String pathToTexture, String pathToSpecularMap) {
+    public Material(String pathToTexture, String pathToSpecularMap, String pathToNormalMap) {
         this.pathToTexture = pathToTexture;
         this.pathToSpecularMap = pathToSpecularMap;
+        this.pathToNormalMap = pathToNormalMap;
         this.create();
     }
 
@@ -49,6 +45,7 @@ public class Material {
         try {
             texture = TextureLoader.getTexture(FORMAT, FileUtils.class.getModule().getResourceAsStream(pathToTexture), GL_NEAREST);
             specular = TextureLoader.getTexture(FORMAT, FileUtils.class.getModule().getResourceAsStream(pathToSpecularMap), GL_NEAREST);
+            normal = TextureLoader.getTexture(FORMAT, FileUtils.class.getModule().getResourceAsStream(pathToNormalMap), GL_NEAREST);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error: could not load texture.");
@@ -59,6 +56,7 @@ public class Material {
         height = texture.getHeight();
         textureID = texture.getTextureID();
         specularID = specular.getTextureID();
+        normalID = normal.getTextureID();
     }
 
     /**
@@ -67,6 +65,7 @@ public class Material {
     public void destroy() {
         GL20.glDeleteTextures(textureID);
         GL20.glDeleteTextures(specularID);
+        GL20.glDeleteTextures(normalID);
     }
 
     /**
@@ -99,5 +98,13 @@ public class Material {
      */
     public int getSpecularID() {
         return this.specularID;
+    }
+
+    /**
+     * getter method
+     * @return - the id of the normal map
+     */
+    public int getNormalID() {
+        return this.normalID;
     }
 }

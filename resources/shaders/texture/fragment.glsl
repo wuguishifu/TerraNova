@@ -3,7 +3,10 @@
 // input vectors
 in vec2 passTextureCoord;
 in vec3 passFragPos;
-in vec4 passNormal;
+in vec3 passTangent;
+in vec3 passBitangent;
+in vec3 passNormal;
+in mat3 TBN;
 
 // the lighting values for shading
 uniform vec3 lightPos;
@@ -14,8 +17,9 @@ uniform float lightLevel;
 uniform vec3 viewPos;
 
 // the tex uniform
-layout(binding = 0) uniform sampler2D diffuseMap;
+layout(binding = 0) uniform sampler2D textureMap;
 layout(binding = 1) uniform sampler2D specularMap;
+layout(binding = 2) uniform sampler2D normalMap;
 
 // the output color
 out vec4 outColor;
@@ -23,14 +27,15 @@ out vec4 outColor;
 void main() {
 
     // get the rgb components of the texture
-    vec4 textureColor = texture(diffuseMap, passTextureCoord);
+    vec4 textureColor = texture(textureMap, passTextureCoord);
     vec3 color = vec3(textureColor.xyz);
 
     // get the alpha value of the texture
     float alpha = textureColor.w;
 
-    // get the xyz components of the normal vector
-    vec3 normal = vec3(passNormal);
+    vec3 normal = texture(normalMap, passTextureCoord).rgb;
+    normal = normal * 2.0 - 1.0;
+    normal = normalize(TBN * normal);
 
     // calculate the ambient lighting
     vec3 ambientLight = lightLevel * lightColor; // create the ambient light level

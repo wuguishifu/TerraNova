@@ -1,5 +1,7 @@
 package com.bramerlabs.engine.graphics;
 
+import com.bramerlabs.engine.math.Vector2f;
+import com.bramerlabs.engine.math.Vector3f;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
@@ -30,6 +32,12 @@ public class Mesh {
 
     // normal vector buffer object
     private int nbo;
+
+    // tangent buffer object
+    private int tan;
+
+    // bitangent buffer object
+    private int bitan;
 
     // texture buffer object
     private int tbo;
@@ -87,11 +95,97 @@ public class Mesh {
         // if there is a material, make the texture buffer
         if (material != null) {
             makeTextureBuffer();
+            makeTangentBuffer();
         } else {
             makeColorBuffer();
         }
 
         makeIndexBuffer();
+    }
+
+    /**
+     * creates tangent buffer
+     */
+    private void makeTangentBuffer() {
+
+        // iterate over all triangles
+        for (int i = 0; i < indices.length; i += 3) {
+            // get the vertices in this triangle
+            Vertex v1 = vertices[indices[i    ]];
+            Vertex v2 = vertices[indices[i + 1]];
+            Vertex v3 = vertices[indices[i + 2]];
+
+            // calculate the edge vectors
+            Vector3f edge1 = Vector3f.subtract(v2.getPosition(), v1.getPosition());
+            Vector3f edge2 = Vector3f.subtract(v3.getPosition(), v1.getPosition());
+
+            // calculate the difference in texture coord
+            Vector2f deltaUV1 = Vector2f.subtract(v2.getTextureCoord(), v1.getTextureCoord());
+            Vector2f deltaUV2 = Vector2f.subtract(v3.getTextureCoord(), v1.getTextureCoord());
+
+            // calculate fractional f
+            float f = 1.0f / (deltaUV1.getX() * deltaUV2.getY() - deltaUV2.getX() * deltaUV1.getY());
+
+            float tx = f * (deltaUV2.getY() * edge1.getX() - deltaUV1.getY() * edge2.getX());
+            float ty = f * (deltaUV2.getY() * edge1.getY() - deltaUV1.getY() * edge2.getY());
+            float tz = f * (deltaUV2.getY() * edge1.getZ() - deltaUV1.getY() * edge2.getZ());
+
+            float bx = f * (-deltaUV2.getX() * edge1.getX() + deltaUV1.getX() * edge2.getX());
+            float by = f * (-deltaUV2.getX() * edge1.getY() + deltaUV1.getX() * edge2.getY());
+            float bz = f * (-deltaUV2.getX() * edge1.getZ() + deltaUV1.getX() * edge2.getZ());
+
+            Vector3f tangent = new Vector3f(tx, ty, tz);
+            Vector3f bitangent = new Vector3f(bx, by, bz);
+
+            // set the tangents
+            if (!v1.hasTangent()) {
+                v1.setTangent(tangent);
+            }
+            if (!v2.hasTangent()) {
+                v2.setTangent(tangent);
+            }
+            if (!v3.hasTangent()) {
+                v3.setTangent(tangent);
+            }
+
+            // set the bitangents
+            if (!v1.hasBitangent()) {
+                v1.setBitangent(bitangent);
+            }
+            if (!v2.hasBitangent()) {
+                v2.setBitangent(bitangent);
+            }
+            if (!v3.hasBitangent()) {
+                v3.setBitangent(bitangent);
+            }
+        }
+
+        // preallocate memory
+        FloatBuffer tangentBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
+        FloatBuffer bitangentBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
+
+        // create new temp array to store data
+        float[] tangentData = new float[vertices.length * 3];
+        float[] bitangentData = new float[vertices.length * 3];
+
+        // add all the tangent and bitangent ata
+        for (int i = 0; i < vertices.length; i ++) {
+            tangentData[i * 3    ] = vertices[i].getTangent().getX();
+            tangentData[i * 3 + 1] = vertices[i].getTangent().getY();
+            tangentData[i * 3 + 2] = vertices[i].getTangent().getZ();
+            bitangentData[i * 3    ] = vertices[i].getBitangent().getX();
+            bitangentData[i * 3 + 1] = vertices[i].getBitangent().getY();
+            bitangentData[i * 3 + 2] = vertices[i].getBitangent().getZ();
+        }
+
+        // flip the data to make it handleable by OpenGL
+        tangentBuffer.put(tangentData).flip();
+        bitangentBuffer.put(bitangentData).flip();
+
+        // store the data in the buffer object
+        tan = storeData(tangentBuffer, 3, 3);
+        bitan = storeData(bitangentBuffer, 4, 3);
+
     }
 
     /**
@@ -293,6 +387,22 @@ public class Mesh {
      */
     public Material getMaterial() {
         return this.material;
+    }
+
+    /**
+     * getter method
+     * @return - the tangent buffer object
+     */
+    public int getTAN() {
+        return tan;
+    }
+
+    /**
+     * getter method
+     * @return - the bitangent buffer object
+     */
+    public int getBITAN() {
+        return bitan;
     }
 
     /**
