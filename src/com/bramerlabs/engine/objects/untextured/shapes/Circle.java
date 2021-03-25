@@ -1,5 +1,6 @@
 package com.bramerlabs.engine.objects.untextured.shapes;
 
+import com.bramerlabs.engine.math.shapes_2d.Triangle;
 import com.bramerlabs.engine.math.Vector3f;
 
 import java.util.ArrayList;
@@ -70,6 +71,32 @@ public class Circle {
             v = Vector3f.add(v, this.position);
             this.vertices.add(v);
         }
+    }
+
+    /**
+     * generates a list of triangles to make a circle
+     * @param position - the position of the circle
+     * @param radius - the radius of the circle
+     * @param normal - a vector normal to the circle
+     * @return - a list of triangles used to render the circle
+     */
+    public static ArrayList<Triangle> generateTriangles(Vector3f position, float radius, Vector3f normal) {
+        // generate two orthogonal vectors, v1 and v2, on the plane described by the normal vector
+        // take some random vector v0 non-parallel to the normal vector
+        Vector3f v0 = new Vector3f(1, 0, 1);
+        if (Vector3f.cross(normal, v0).equals(new Vector3f(0, 0, 0), 0.00001f)) {
+            v0 = new Vector3f(0, 1, 1);
+        }
+
+        // generate normal vectors
+        Vector3f v1 = Vector3f.normalize(Vector3f.cross(normal, v0), radius);
+        Vector3f v2 = Vector3f.normalize(Vector3f.cross(normal, v1), radius);
+
+        // determine the change in t corresponding to the number of vertices required
+        float dt = ((float) Math.PI * 2) / 40;
+
+        return null;
+
     }
 
     /**

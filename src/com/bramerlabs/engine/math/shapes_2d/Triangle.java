@@ -1,4 +1,6 @@
-package com.bramerlabs.engine.math;
+package com.bramerlabs.engine.math.shapes_2d;
+
+import com.bramerlabs.engine.math.Vector3f;
 
 public class Triangle {
 

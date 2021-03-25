@@ -185,7 +185,6 @@ public class Mesh {
         // store the data in the buffer object
         tan = storeData(tangentBuffer, 3, 3);
         bitan = storeData(bitangentBuffer, 4, 3);
-
     }
 
     /**

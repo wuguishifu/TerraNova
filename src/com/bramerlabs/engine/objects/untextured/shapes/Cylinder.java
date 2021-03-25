@@ -2,7 +2,7 @@ package com.bramerlabs.engine.objects.untextured.shapes;
 
 import com.bramerlabs.engine.graphics.Mesh;
 import com.bramerlabs.engine.graphics.Vertex;
-import com.bramerlabs.engine.math.Triangle;
+import com.bramerlabs.engine.math.shapes_2d.Triangle;
 import com.bramerlabs.engine.math.Vector3f;
 import com.bramerlabs.engine.math.Vector4f;
 import com.bramerlabs.engine.objects.untextured.RenderObject;
@@ -62,6 +62,32 @@ public class Cylinder extends RenderObject {
 
         Mesh mesh = generateMesh(triangles, color, sphere1, sphere2, p1, p2); // rounded edges
 //        Mesh mesh = generateMesh(triangles, color); // flat, unrendered edges
+        return new Cylinder(mesh, position, rotation, scale);
+    }
+
+    /**
+     * makes a cylinder
+     *
+     * @param p1     - the focus of the first circle
+     * @param p2     - the focus of the second circle
+     * @param color  - the color of this cylinder
+     * @param r1     - the radius of the first circular face of this cylinder
+     * @param r2     - the radius of the second circular face of this cylinder
+     * @return - the new cylinder
+     */
+    public static Cylinder makeCylinder(Vector3f p1, Vector3f p2, Vector4f color, float r1, float r2) {
+        Vector3f position = Vector3f.midpoint(p1, p2);
+        ArrayList<Triangle> triangles = generateTriangles(p1, p2, r1, r2, SMOOTHNESS);
+
+        // the triangles in the spheres at the ends of the cylinder
+//        ArrayList<Triangle> sphere1 = Sphere.generateTriangles(r1);
+//        ArrayList<Triangle> sphere2 = Sphere.generateTriangles(r2);
+
+        // the triangles in the circles at the ends of the cylinder
+
+
+//        Mesh mesh = generateMesh(triangles, color, sphere1, sphere2, p1, p2); // rounded edges
+        Mesh mesh = generateMesh(triangles, color); // flat, unrendered edges
         return new Cylinder(mesh, position, rotation, scale);
     }
 
@@ -163,12 +189,55 @@ public class Cylinder extends RenderObject {
     }
 
     /**
+     * generates the triangles making up this cylinder
+     */
+    private static ArrayList<Triangle> generateTriangles(Vector3f p1, Vector3f p2, float r1, float r2, int smoothness) {
+        Circle[] circles = generateCircles(p1, p2, r1, r2, smoothness);
+        ArrayList<Triangle> faces = new ArrayList<>();
+
+        ArrayList<Vector3f> v1 = circles[0].getVertices();
+        ArrayList<Vector3f> v2 = circles[1].getVertices();
+
+        for (int i = 0; i < v1.size() - 1; i++) {
+
+            // make normal vectors
+            Vector3f n1 = Vector3f.cross(Vector3f.subtract(v1.get(i), v1.get(i + 1)), Vector3f.subtract(v2.get(i), v1.get(i + 1)));
+            Vector3f n2 = Vector3f.cross(Vector3f.subtract(v1.get(i + 1), v2.get(i + 1)), Vector3f.subtract(v2.get(i), v2.get(i + 1)));
+
+            // make the triangles
+            faces.add(new Triangle(v2.get(i), v1.get(i + 1), v1.get(i), n1));
+            faces.add(new Triangle(v2.get(i + 1), v1.get(i + 1), v2.get(i), n2));
+        }
+
+        // make normal vectors
+        Vector3f n1 = Vector3f.cross(Vector3f.subtract(v1.get(v1.size() - 1), v1.get(0)), Vector3f.subtract(v2.get(v2.size() - 1), v1.get(v1.size() - 1)));
+        Vector3f n2 = Vector3f.cross(Vector3f.subtract(v1.get(0), v2.get(v2.size() - 1)), Vector3f.subtract(v2.get(v2.size() - 1), v2.get(0)));
+
+        // make the triangles
+        faces.add(new Triangle(v2.get(v1.size() - 1), v1.get(0), v1.get(v1.size() - 1), n1));
+        faces.add(new Triangle(v2.get(0), v1.get(0), v2.get(v2.size() - 1), n2));
+
+        return faces;
+    }
+
+    /**
      * generates the circles making up this cylinder
      */
     private static Circle[] generateCircles(Vector3f p1, Vector3f p2, float radius, int smoothness) {
         Vector3f normal = Vector3f.subtract(p1, p2);
         Circle c1 = new Circle(p1, radius, normal, smoothness);
         Circle c2 = new Circle(p2, radius, normal, smoothness);
+
+        return new Circle[]{c1, c2};
+    }
+
+    /**
+     * generates the circles making up this cylinder
+     */
+    private static Circle[] generateCircles(Vector3f p1, Vector3f p2, float r1, float r2, int smoothness) {
+        Vector3f normal = Vector3f.subtract(p1, p2);
+        Circle c1 = new Circle(p1, r1, normal, smoothness);
+        Circle c2 = new Circle(p2, r2, normal, smoothness);
 
         return new Circle[]{c1, c2};
     }

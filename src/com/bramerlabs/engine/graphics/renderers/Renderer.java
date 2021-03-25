@@ -46,7 +46,7 @@ public class Renderer {
         shader.setUniform("view", Matrix4f.view(camera.getPosition(), camera.getRotation()));
         shader.setUniform("projection", window.getProjectionMatrix());
         shader.setUniform("lightPos", lightPosition);
-        shader.setUniform("lightLevel", 0.1f);
+        shader.setUniform("lightLevel", 0.3f);
         shader.setUniform("viewPos", camera.getPosition());
         shader.setUniform("lightColor", lightColor);
         GL11.glDrawElements(GL11.GL_TRIANGLES, object.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);

@@ -3,13 +3,13 @@ package com.bramerlabs.terra_nova.main;
 import com.bramerlabs.engine.graphics.Camera;
 import com.bramerlabs.engine.graphics.renderers.Renderer;
 import com.bramerlabs.engine.graphics.Shader;
-import com.bramerlabs.engine.graphics.renderers.TextureRenderer;
 import com.bramerlabs.engine.io.window.Input;
 import com.bramerlabs.engine.io.window.Window;
 import com.bramerlabs.engine.math.Vector3f;
 import com.bramerlabs.engine.math.Vector4f;
-import com.bramerlabs.engine.objects.textured.test.Box;
 import com.bramerlabs.engine.objects.untextured.shapes.Cube;
+import com.bramerlabs.engine.objects.untextured.shapes.Cylinder;
+import com.bramerlabs.terra_nova.main.objects.Tree;
 import org.lwjgl.opengl.GL46;
 
 public class Main implements Runnable {
@@ -24,19 +24,17 @@ public class Main implements Runnable {
     private Camera camera;
 
     // shaders to use
-    private Shader defaultShader, lightShader, textureShader;
+    private Shader defaultShader, lightShader;
 
     // renderers to use
     private Renderer renderer;
-    private TextureRenderer textureRenderer;
 
     // the position of light
     Vector3f lightPosition = new Vector3f(1.0f, 2.0f, 3.0f);
 
     // test objects
-    private Cube cube;
     private Cube lightCube;
-    private Box box;
+    private Tree tree;
 
     /**
      * the main runnable method
@@ -71,6 +69,7 @@ public class Main implements Runnable {
 
     private void init() {
         // initialize the window
+        Window.setBackgroundColor(Vector3f.divide(new Vector3f(204, 232, 220), new Vector3f(255)));
         window.create();
 
         // initialize shaders
@@ -80,27 +79,20 @@ public class Main implements Runnable {
         lightShader = new Shader(
                 "/shaders/light/vertex.glsl",
                 "/shaders/light/fragment.glsl").create();
-        textureShader = new Shader(
-                "/shaders/texture/vertex.glsl",
-                "/shaders/texture/fragment.glsl").create();
 
         // initialize renderers
         renderer = new Renderer(window, lightPosition);
-        textureRenderer = new TextureRenderer(window, lightPosition);
 
         // initialize the camera
         camera = new Camera(new Vector3f(0), new Vector3f(0), input);
         camera.setFocus(new Vector3f(0, 0, 0));
 
-        // initialize objects
-        cube = new Cube(new Vector3f(0), new Vector3f(0), new Vector3f(1), new Vector4f(0.5f, 0.5f, 0.5f, 1.0f));
-        cube.createMesh();
-
         lightCube = new Cube(lightPosition, new Vector3f(0), new Vector3f(0.5f), new Vector4f(1.0f));
         lightCube.createMesh();
 
-        box = new Box(new Vector3f(0), new Vector3f(0), new Vector3f(2), "textures/wall");
-        box.createMesh();
+        tree = Tree.getInstance(61361311);
+//        tree = Tree.getInstance(200);
+        tree.createMesh();
 
     }
 
@@ -122,9 +114,8 @@ public class Main implements Runnable {
 
     private void render() {
         // render the objects
-//        renderer.renderMesh(cube, camera, defaultShader);
         renderer.renderMesh(lightCube, camera, lightShader);
-        textureRenderer.renderMesh(box, camera, textureShader);
+        renderer.renderMesh(tree, camera, defaultShader);
 
         // swap buffers at the end
         window.swapBuffers();
@@ -135,7 +126,6 @@ public class Main implements Runnable {
         window.destroy();
 
         // release the objects
-        cube.destroy();
         lightCube.destroy();
 
         // release the shaders

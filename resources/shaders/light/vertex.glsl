@@ -3,7 +3,6 @@
 // input values
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec4 color;
-layout(location = 2) in vec3 normal;
 
 // output values
 out vec4 passColor;

@@ -6,14 +6,23 @@ import java.util.Objects;
 
 public class Vector3f {
 
-    // the x, y, z components of this vector
-    private float x, y, z;
+    /**
+     * the x, y, and z components of this vector
+     */
+    public float x, y, z;
 
     /**
-     * default constructor for three specified values
-     * @param x - the x component of this vector
-     * @param y - the y component of this vector
-     * @param z - the z component of this vector
+     * unit vectors in the e1, e2, and e3 directions
+     */
+    public static final Vector3f e1 = new Vector3f(1, 0, 0);
+    public static final Vector3f e2 = new Vector3f(0, 1, 0);
+    public static final Vector3f e3 = new Vector3f(0, 0, 1);
+
+    /**
+     * default constructor
+     * @param x - the x component
+     * @param y - the y component
+     * @param z - the z component
      */
     public Vector3f(float x, float y, float z) {
         this.x = x;
@@ -22,28 +31,18 @@ public class Vector3f {
     }
 
     /**
-     * constructor for a vector from a color object
-     * @param c - the color object
+     * constructor for 1 specified value
+     * @param val - the value for all three components to be set to
      */
-    public Vector3f(Color c) {
-        this.x = c.getRed();
-        this.y = c.getGreen();
-        this.z = c.getBlue();
+    public Vector3f(float val) {
+        this.x = val;
+        this.y = val;
+        this.z = val;
     }
 
     /**
-     * constructor for one specified value
-     * @param value - the value for all 3 components to be set to
-     */
-    public Vector3f(float value) {
-        this.x = value;
-        this.y = value;
-        this.z = value;
-    }
-
-    /**
-     * constructor for a specified vector
-     * @param v - the other vector
+     * constructor for duplicating a vector
+     * @param v - the vector to duplicate
      */
     public Vector3f(Vector3f v) {
         this.x = v.x;
@@ -52,21 +51,9 @@ public class Vector3f {
     }
 
     /**
-     * constructor from a float array
-     * @param position - a float array containing position in form [x, y, z].
-     * method will automatically set the position based off of available variables.
-     * no minimum or maximum supplied variables, if more than 3 position will be first 3.
-     */
-    public Vector3f(float[] position) {
-        x = position.length > 0 ? position[0] : 0;
-        y = position.length > 1 ? position[1] : 0;
-        z = position.length > 2 ? position[2] : 0;
-    }
-
-    /**
-     * constructor from a vector2f and a z value
-     * @param v - the 2 vector
-     * @param z - the z value
+     * constructor for a vector from a 2-float vector and a float z component
+     * @param v - the 2-float vector
+     * @param z - the z component
      */
     public Vector3f(Vector2f v, float z) {
         this.x = v.getX();
@@ -75,44 +62,31 @@ public class Vector3f {
     }
 
     /**
-     * gets a random vector3f
-     * @param min - the min value for each component
-     * @param max - the max value for each component
-     * @return - a new vector3f with 3 random components each between min, max
+     * constructor from a float array
+     * @param v - a float array containing values in form [x, y, z]
+     * method will automatically set the position based off of available variables.
+     * No minimum or maximum necessary supplied variables, if more than 3 are supplied the vector
+     * will be constructed out of the first 3.
      */
-    public static Vector3f getRandom(float min, float max) {
-        float x = (float) (Math.random() * (max - min) + min);
-        float y = (float) (Math.random() * (max - min) + min);
-        float z = (float) (Math.random() * (max - min) + min);
-        return new Vector3f(x, y, z);
+    public Vector3f(float[] v) {
+        this.x = v.length > 0 ? v[0] : 0;
+        this.y = v.length > 1 ? v[1] : 0;
+        this.z = v.length > 2 ? v[2] : 0;
     }
 
     /**
-     * creates an identity vector in the e1 direction
-     * @return - the identity vector
+     * constructor from a java awt color
+     * makes a vector in the form (r, g, b)
+     * @param c - the color
      */
-    public static Vector3f e1() {
-        return new Vector3f(1, 0, 0);
+    public Vector3f(Color c) {
+        this.x = c.getRed();
+        this.y = c.getGreen();
+        this.z = c.getBlue();
     }
 
     /**
-     * creates an identity vector in the e2 direction
-     * @return - the identity vector
-     */
-    public static Vector3f e2() {
-        return new Vector3f(0, 1, 0);
-    }
-
-    /**
-     * creates an identity vector in the e3 direction
-     * @return - the identity vector
-     */
-    public static Vector3f e3() {
-        return new Vector3f(0, 0, 1);
-    }
-
-    /**
-     * sets the components of this vector
+     * sets each component of this vector
      * @param x - the new x component
      * @param y - the new y component
      * @param z - the new z component
@@ -124,46 +98,34 @@ public class Vector3f {
     }
 
     /**
-     * sets a specific component of this vector
-     * @param c - which component to set
-     * @param val - the value to be set
+     * sets the x component
+     * @param x - the new x value
      */
-    public void set(int c, float val) {
-        switch (c) {
-            case 0 : this.x = val; break;
-            case 1 : this.y = val; break;
-            case 2 : this.z = val; break;
-        }
+    public void setX(float x) {
+        this.x = x;
     }
 
     /**
-     * gets a specific value of this vector
-     * @param c - which component to get
-     * @return - the value
+     * sets the y component
+     * @param y - the new y value
      */
-    public float get(int c) {
-        switch (c) {
-            case 0 : return this.x;
-            case 1 : return this.y;
-            case 2 : return this.z;
-        }
-        return -1;
+    public void setY(float y) {
+        this.y = y;
     }
 
     /**
-     * returns the negative of a vector
-     * @param v - the vector
-     * @return - the negative
+     * sets the z component
+     * @param z - the new z value
      */
-    public static Vector3f negative(Vector3f v) {
-        return new Vector3f(-v.x, -v.y, -v.z);
+    public void setZ(float z) {
+        this.z = z;
     }
 
     /**
-     * adds values to each component of this vector
-     * @param dx - the value to be added to the x component
-     * @param dy - the value to be added to the y component
-     * @param dz - the value to be added to the z component
+     * adds values to each component to this vector
+     * @param dx - the change in x component
+     * @param dy - the change in y component
+     * @param dz - the change in z component
      * @return - this vector
      */
     public Vector3f add(float dx, float dy, float dz) {
@@ -174,79 +136,226 @@ public class Vector3f {
     }
 
     /**
-     * scales the entire vector
-     * @param val - the value for this vector to be scaled by
+     * adds a vector to this vector
+     * @param v - the vector to be added to this vector
      * @return - this vector
      */
-    public Vector3f scale(float val) {
-        this.x *= val;
-        this.y *= val;
-        this.z *= val;
+    public Vector3f add(Vector3f v) {
+        this.x += v.x;
+        this.y += v.y;
+        this.z += v.z;
         return this;
     }
 
     /**
+     * adds values to each component of a vector
+     * @param v - the vector to add to
+     * @param dx - the change in x component
+     * @param dy - the change in y component
+     * @param dz - the change in z component
+     * @return - a new vector, v + (dx, dy, dz)
+     */
+    public static Vector3f add(Vector3f v, float dx, float dy, float dz) {
+        return new Vector3f(v.x + dx, v.y + dy, v.z + dz);
+    }
+
+    /**
      * adds two vectors together
-     * @param u - vector 1
-     * @param v - vector 2
-     * @return - a new vector u + v
+     * @param v - vector 1
+     * @param u - vector 2
+     * @return - a new vector, the sum of v and u
      */
     public static Vector3f add(Vector3f v, Vector3f u) {
         return new Vector3f(v.x + u.x, v.y + u.y, v.z + u.z);
     }
 
     /**
-     * subtracts two vectors
-     * @param u - vector 1
-     * @param v - vector 2
-     * @return - a new vector u - v
-     */
-    public static Vector3f subtract(Vector3f u, Vector3f v) {
-        return new Vector3f(u.x - v.x, u.y - v.y, u.z - v.z);
-    }
-
-    /**
-     * element-wise multiplication of two vectors
-     * @param vector1 - vector 1
-     * @param vector2 - vector 2
-     * @return - a new vector representing the element-wise multiplication of u, v
-     */
-    public static Vector3f multiply(Vector3f vector1, Vector3f vector2) {
-        return new Vector3f(vector1.getX() * vector2.getX(), vector1.getY() * vector2.getY(), vector1.getZ() * vector2.getZ());
-    }
-
-    /**
-     * scales a vector
-     * @param vector1 - the vector
+     * scales each component in this vector by a scale factor
      * @param scaleFactor - the scale factor
-     * @return - a new vector representing the scalar multiplication of the vector and float
+     * @return - this vector
      */
-    public static Vector3f scale(Vector3f vector1, float scaleFactor) {
-        return new Vector3f(vector1.getX() * scaleFactor, vector1.getY() * scaleFactor, vector1.getZ() * scaleFactor);
+    public Vector3f scale(float scaleFactor) {
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        this.z *= scaleFactor;
+        return this;
     }
 
     /**
-     * element-wise division of two vectors
-     * @param vector1 - vector 1
-     * @param vector2 - vector 2
-     * @return - a new vector representing the element-wise division of u, v
+     * scales each component in a vector by a scale factor
+     * @param v - the vector to scale
+     * @param scaleFactor - the scale factor
+     * @return - a new vector, the scalar scale of v by scaleFactor
      */
-    public static Vector3f divide(Vector3f vector1, Vector3f vector2) {
-        return new Vector3f(vector1.getX() / vector2.getX(), vector1.getY() / vector2.getY(), vector1.getZ() / vector2.getZ());
+    public static Vector3f scale(Vector3f v, float scaleFactor) {
+        return new Vector3f(v.x * scaleFactor, v.y * scaleFactor, v.z * scaleFactor);
     }
 
     /**
-     * computes the dot product of two vectors
-     * @param vector1 - vector 1
-     * @param vector2 - vector 2
-     * @return - the dot product (u dot v)
+     * subtracts from each component of this vector
+     * @param dx - the change in x component
+     * @param dy - the change in y component
+     * @param dz - the change in z component
+     * @return - this vector
      */
-    public static float dot(Vector3f vector1, Vector3f vector2) {
-        return vector1.getX() * vector2.getX() + vector1.getY() * vector2.getY() + vector1.getZ() * vector2.getZ();
+    public Vector3f subtract(float dx, float dy, float dz) {
+        this.x -= dx;
+        this.y -= dy;
+        this.z -= dz;
+        return this;
     }
 
     /**
-     * takes the cross product of two vectors
+     * subtracts each component of this vector by a component of another vector
+     * @param v - the other vector
+     * @return - this vector
+     */
+    public Vector3f subtract(Vector3f v) {
+        this.x -= v.x;
+        this.y -= v.y;
+        this.z -= v.z;
+        return this;
+    }
+
+    /**
+     * subtracts from each component in a vector
+     * @param v - the vector
+     * @param dx - the change in x component
+     * @param dy - the change in y component
+     * @param dz - the change in z component
+     * @return - a new vector, v - (dx, dy, dz)
+     */
+    public static Vector3f subtract(Vector3f v, float dx, float dy, float dz) {
+        return new Vector3f(v.x - dx, v.y - dy, v.z - dz);
+    }
+
+    /**
+     * subtracts two vectors
+     * @param v - vector 1
+     * @param u - vector 2
+     * @return - a new vector, v - u
+     */
+    public static Vector3f subtract(Vector3f v, Vector3f u) {
+        return new Vector3f(v.x - u.x, v.y - u.y, v.z - u.z);
+    }
+
+    /**
+     * multiplies the components of this vector by values
+     * @param mx - the multiplication factor of the x component
+     * @param my - the multiplication factor of the y component
+     * @param mz - the multiplication factor of the z component
+     * @return - this vector
+     */
+    public Vector3f multiply(float mx, float my, float mz) {
+        this.x *= mx;
+        this.y *= my;
+        this.z *= mz;
+        return this;
+    }
+
+    /**
+     * multiplies the components of this vector by the components of another vector
+     * @param v - the other vector
+     * @return - this vector
+     */
+    public Vector3f multiply(Vector3f v) {
+        this.x *= v.x;
+        this.y *= v.y;
+        this.z *= v.z;
+        return this;
+    }
+
+    /**
+     * multiplies the components of a vector by values
+     * @param v - the vector
+     * @param mx - the multiplication factor of the x component
+     * @param my - the multiplication factor of the y component
+     * @param mz - the multiplication factor of the z component
+     * @return - a new vector
+     */
+    public static Vector3f multiply(Vector3f v, float mx, float my, float mz) {
+        return new Vector3f(v.x * mx, v.y * my, v.z * mz);
+    }
+
+    /**
+     * multiplies the components of one vector by the components of another vector
+     * @param v - the first vector
+     * @param u - the second vector
+     * @return - a vector where the values are the straight multiplication of v and u
+     */
+    public static Vector3f multiply(Vector3f v, Vector3f u) {
+        return new Vector3f(v.x * u.x, v.y * u.y, v.z * u.z);
+    }
+
+    /**
+     * divides the components of this vector by values
+     * @param mx - the division factor of the x component
+     * @param my - the division factor of the y component
+     * @param mz - the division factor of the z component
+     * @return - this vector
+     */
+    public Vector3f divide(float mx, float my, float mz) {
+        this.x /= mx;
+        this.y /= my;
+        this.z /= mz;
+        return this;
+    }
+
+    /**
+     * divides the components of this vector by the components of another vector
+     * @param v - the other vector
+     * @return - this vector
+     */
+    public Vector3f divide(Vector3f v) {
+        this.x /= v.x;
+        this.y /= v.y;
+        this.z /= v.z;
+        return this;
+    }
+
+    /**
+     * divides the components of a vector by values
+     * @param v - the vector
+     * @param mx - the division factor of the x component
+     * @param my - the division factor of the y component
+     * @param mz - the division factor of the z component
+     * @return - a new vector
+     */
+    public static Vector3f divide(Vector3f v, float mx, float my, float mz) {
+        return new Vector3f(v.x / mx, v.y / my, v.z / mz);
+    }
+
+    /**
+     * divides the components of one vector by the components of another vector
+     * @param v - the first vector
+     * @param u - the second vector
+     * @return - a new vector
+     */
+    public static Vector3f divide(Vector3f v, Vector3f u) {
+        return new Vector3f(v.x / u.x, v.y / u.y, v.z / u.z);
+    }
+
+    /**
+     * dots this vector with another vector
+     * @param v - the other vector
+     * @return - the dot product of this vector and the other vector
+     */
+    public float dot(Vector3f v) {
+        return this.x * v.x + this.y * v.y + this.z * v.z;
+    }
+
+    /**
+     * dots two vectors together
+     * @param v - the first vector
+     * @param u - the second vector
+     * @return - the dot product v dot u
+     */
+    public static float dot(Vector3f v, Vector3f u) {
+        return v.x * u.x + v.y * u.y + v.z * u.z;
+    }
+
+    /**
+     * computes the cross product of two vectors
      * @param v - vector 1
      * @param u - vector 2
      * @return - the cross product of v and u (v x u)
@@ -259,6 +368,65 @@ public class Vector3f {
     }
 
     /**
+     * computes the length of this vector
+     * @return - the length of this vector
+     */
+    public float length() {
+        return (float) Math.sqrt(x * x + y * y + z * z);
+    }
+
+    /**
+     * computes the length of a vector
+     * @param v - the vector
+     * @return - the length of vector v
+     */
+    public static float length(Vector3f v) {
+        return (float) Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    }
+
+    /**
+     * normalizes this vector
+     * @return - this vector
+     */
+    public Vector3f normalize() {
+        this.x /= this.length();
+        this.y /= this.length();
+        this.z /= this.length();
+        return this;
+    }
+
+    /**
+     * normalizes this vector to a specific length
+     * @param l - the new length
+     * @return - this vector
+     */
+    public Vector3f normalize(float l) {
+        this.x *= l / this.length();
+        this.y *= l / this.length();
+        this.z *= l / this.length();
+        return this;
+    }
+
+    /**
+     * normalizes a vector
+     * @param v - the other vector
+     * @return - a new vector with a length of 1 in the same direction of v
+     */
+    public static Vector3f normalize(Vector3f v) {
+        return Vector3f.divide(v, new Vector3f(length(v)));
+    }
+
+    /**
+     * normalizes a vector to a specific length
+     * @param v - the vector
+     * @param l - the length
+     * @return - a new vector with length l in the same direction of v
+     */
+    public static Vector3f normalize(Vector3f v, float l) {
+        return Vector3f.normalize(v).scale(l);
+    }
+
+    /**
      * determines the length between two vectors
      * @param v - vector 1
      * @param u - vector 2
@@ -266,44 +434,6 @@ public class Vector3f {
      */
     public static float distance(Vector3f v, Vector3f u) {
         return length(multiply(subtract(u, v), subtract(u, v)));
-    }
-
-    /**
-     * determines the length of a vector
-     * @param vector - the vector
-     * @return - the length
-     */
-    public static float length(Vector3f vector) {
-        return (float) Math.sqrt(vector.getX() * vector.getX() + vector.getY() * vector.getY() + vector.getZ() * vector.getZ());
-    }
-
-    /**
-     * normalizes a vector
-     * @param v - the vector
-     * @return - the vector as a normal vector
-     */
-    public static Vector3f normalize(Vector3f v) {
-        return Vector3f.divide(v, new Vector3f(length(v)));
-    }
-
-    public void normalize(float length) {
-        float l = Vector3f.length(this);
-        this.x /= l;
-        this.y /= l;
-        this.z /= l;
-        this.x *= length;
-        this.y *= length;
-        this.z *= length;
-    }
-
-    /**
-     * normalizes a vector to a specific length
-     * @param v - the vector
-     * @param length - the length to be normalized to
-     * @return - the new vector
-     */
-    public static Vector3f normalize(Vector3f v, float length) {
-        return (Vector3f.divide(v, new Vector3f(length(v)))).scale(length);
     }
 
     /**
@@ -359,7 +489,7 @@ public class Vector3f {
 
     /**
      * getter method
-     * @return - the z component of this vector
+     * @return - the z component o f this vector
      */
     public float getZ() {
         return this.z;
@@ -390,51 +520,35 @@ public class Vector3f {
     }
 
     /**
-     * sets the x component
-     * @param val - the value
+     * getter method
+     * @return - a 2 float vector of some of the components in this vector
      */
-    public void setX(float val) {
-        this.x = val;
+    public Vector2f xy() {
+        return new Vector2f(x, y);
     }
 
     /**
-     * sets the y component
-     * @param val - the value
+     * getter method
+     * @return - a 2 float vector of some of the components in this vector
      */
-    public void setY(float val) {
-        this.y = val;
+    public Vector2f yz() {
+        return new Vector2f(y, z);
     }
 
     /**
-     * sets the z component
-     * @param val - the value
+     * getter method
+     * @return - a 2 float vector of some of the components in this vector
      */
-    public void setZ(float val) {
-        this.z = val;
+    public Vector2f xz() {
+        return new Vector2f(x, z);
     }
 
     /**
-     * sets the i component
-     * @param val - the value
+     * converts this 3-float vector to a float array
+     * @return - the float array
      */
-    public void setI(float val) {
-        this.x = val;
-    }
-
-    /**
-     * sets the j component
-     * @param val - the value
-     */
-    public void setJ(float val) {
-        this.y = val;
-    }
-
-    /**
-     * sets the k component
-     * @param val - the value
-     */
-    public void setK(float val) {
-        this.z = val;
+    public float[] toFloatArray() {
+        return new float[]{x, y, z};
     }
 
     /**
@@ -460,12 +574,11 @@ public class Vector3f {
         if (this == o) return true;
         if (!(o instanceof Vector3f)) return false;
         Vector3f other = (Vector3f) o;
-        for (int i = 0; i < 3; i++) {
-            if (Math.abs(this.get(i) - other.get(i)) > epsilon) {
-                return false;
-            }
-        }
-        return true;
+        if (x - other.x > epsilon) {
+            return false;
+        } else if (y - other.y > epsilon) {
+            return false;
+        } else return !(z - other.z > epsilon);
     }
 
     /**
@@ -477,6 +590,10 @@ public class Vector3f {
         return Objects.hash(x, y, z);
     }
 
+    /**
+     * converts this vector to a string
+     * @return - the string value of this vector
+     */
     @Override
     public String toString() {
         DecimalFormat df2 = new DecimalFormat("#,###,###,#00.00");

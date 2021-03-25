@@ -2,7 +2,7 @@ package com.bramerlabs.engine.objects.untextured.shapes;
 
 import com.bramerlabs.engine.graphics.Mesh;
 import com.bramerlabs.engine.graphics.Vertex;
-import com.bramerlabs.engine.math.Triangle;
+import com.bramerlabs.engine.math.shapes_2d.Triangle;
 import com.bramerlabs.engine.math.Vector3f;
 import com.bramerlabs.engine.math.Vector4f;
 import com.bramerlabs.engine.objects.untextured.RenderObject;

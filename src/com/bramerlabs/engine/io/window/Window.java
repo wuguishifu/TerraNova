@@ -30,17 +30,28 @@ public class Window {
 
     // background color
 //    private static final Color backgroundColorAsColor = new Color(204, 232, 220);
-    private static final Color backgroundColorAsColor = new Color(0, 0, 0);
+    private static Color backgroundColorAsColor = new Color(0, 0, 0);
 //    private static final Color backgroundColorAsColor = Color.PINK;
 //    private static final Color backgroundColorAsColor = new Color(255, 255, 255);
-    public static final Vector3f bgc = Vector3f.divide(new Vector3f(
+    public static Vector3f bgc = Vector3f.divide(new Vector3f(
             backgroundColorAsColor.getRed(),
             backgroundColorAsColor.getGreen(),
             backgroundColorAsColor.getBlue()
     ), new Vector3f(255.0f));
-    public static final float r = bgc.getX();
-    public static final float g = bgc.getY();
-    public static final float b = bgc.getZ();
+    public static float r = bgc.getX();
+    public static float g = bgc.getY();
+    public static float b = bgc.getZ();
+
+    /**
+     * sets the background color
+     * @param color - the new background color
+     */
+    public static void setBackgroundColor(Vector3f color) {
+        bgc = color;
+        r = color.getX();
+        g = color.getY();
+        b = color.getZ();
+    }
 
     // default window dimensions
     private int defaultWidth, defaultHeight;
