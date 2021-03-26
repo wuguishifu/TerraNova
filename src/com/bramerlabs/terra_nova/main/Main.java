@@ -90,9 +90,7 @@ public class Main implements Runnable {
         lightCube = new Cube(lightPosition, new Vector3f(0), new Vector3f(0.5f), new Vector4f(1.0f));
         lightCube.createMesh();
 
-        tree = Tree.getInstance(61361311);
-//        tree = Tree.getInstance(200);
-        tree.createMesh();
+        tree = Tree.getInstance(200);
 
     }
 
